@@ -42,6 +42,8 @@ namespace WebApi
             // configure strongly typed settings objects
             var appSettingsSection = _configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+            services.Configure<IdentityServerSettings>(_configuration.GetSection("IdentityServerSettings"));
+            services.AddSingleton<ITokenService, TokenService>();
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -49,7 +51,6 @@ namespace WebApi
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.ApiName = "apiRegistration";
                     options.Authority = "https://localhost:5001";
     
                     options.TokenValidationParameters = new TokenValidationParameters
